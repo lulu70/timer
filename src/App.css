@@ -1,0 +1,28 @@
+.blinking {
+    animation: blinkingText 1s infinite;
+}
+
+@keyframes blinkingText {
+    0% {
+        color: red;
+    }
+    49% {
+        color: transparent;
+    }
+    50% {
+        color: transparent;
+    }
+    51% {
+        color: transparent;
+    }
+    100% {
+        color: red;
+    }
+}
+
+.timePicker input{
+    color:white;
+    background: black;
+    font-size: 20px;
+    height: 35px;
+}

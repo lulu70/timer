@@ -1,18 +1,11 @@
 const initialState = {
   visible: true,
+  buttons: [],
   settingIconStyle: {
     position: 'absolute',
     bottom: '5px',
     right: '5px',
     zIndex: '10'
-  },
-  pusherStyle: {
-    height: '100vh',
-    background: 'black',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 }
 
@@ -22,6 +15,24 @@ const timerSidebarReducer = (state = initialState, action) => {
       return {
         ...state,
         visible: !state.visible
+      }
+    }
+    case 'ADD_BUTTON': {
+      return {
+        ...state,
+        buttons: [...state.buttons,{
+          id: action.id,
+          hours: action.hours,
+          minutes: action.minutes,
+          seconds: action.seconds,
+          time: action.time
+        }]
+      }
+    }
+    case 'DELETE_BUTTON': {
+      return {
+        ...state, 
+        buttons: [...state.buttons.slice(0,action.index),...state.buttons.slice(action.index+1)]
       }
     }
     default: {

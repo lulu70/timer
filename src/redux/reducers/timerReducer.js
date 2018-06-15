@@ -1,17 +1,25 @@
 const initialState = {
   duration: 5 * 60 - 1,
   time: '05:00',
+  hours: '0',
+  minutes: '5',
+  seconds: '0',
   timerRunning: false,
   timerInterval: '',
+  messageIsOn: false,
   pStyle: {
     fontSize: '20vw',
     letterSpacing: '2vw',
     fontWeight: 'bold',
+    margin: '0'
+  },
+  containerStyle: {
+    height: '100vh',
+    background: 'black',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    height: '100vh',
-    color: 'white'
+    alignItems: 'center'
   }
 }
 
@@ -21,7 +29,10 @@ const timerReducer = (state = initialState, action) => {
       return {
         ...state,
         duration: action.duration,
-        time: action.time
+        time: action.time,
+        hours: action.hours,
+        minutes: action.minutes,
+        seconds: action.seconds
       }
     }
     case 'SET_DURATION': {
@@ -46,6 +57,12 @@ const timerReducer = (state = initialState, action) => {
       return {
         ...state,
         timerInterval: action.interval
+      }
+    }
+    case 'TOGGLE_MESSAGE': {
+      return {
+        ...state,
+        messageIsOn:!state.messageIsOn
       }
     }
     default: {

@@ -16,26 +16,29 @@ class Timer extends Component {
     let seconds
 
     const interval = setInterval(() => {
-      
       hours = parseInt(timer / 3600, 10)
       minutes = parseInt(timer / 60, 10)
       seconds = parseInt(timer % 60, 10)
-      
-      minutes = minutes > 59 ? (minutes % 60) : minutes
+
+      minutes = minutes > 59 ? minutes % 60 : minutes
 
       const duration = seconds + minutes * 60 + hours * 3600 - 1
-      
+
       minutes = minutes < 10 ? '0' + minutes : minutes
       seconds = seconds < 10 ? '0' + seconds : seconds
 
-
       this.props.updateTimer(
         `${hours < 1 ? '' : hours + ':'}${minutes}:${seconds}`,
+        hours,
+        minutes,
+        seconds,
         duration
       )
       timer = timer - 1
       if (timer < 0) {
-        timer = this.props.duration
+        this.props.pauseTimer()
+        this.pauseTimer()
+        this.props.toggleMessage()
       }
     }, 1000)
     this.props.setTimerInterval(interval)
@@ -46,11 +49,23 @@ class Timer extends Component {
   }
 
   render() {
-    const { time, pStyle } = this.props
     return (
-      <div id="timerContainer">
-        <p id="timer" style={pStyle}>
-          {time}
+      <div id="timerContainer" style={this.props.containerStyle}>
+        <p
+          id="message"
+          style={{
+            ...this.props.pStyle,
+            fontSize: '10vh',
+            letterSpacing: '1vh',
+            color: 'red',
+            display: this.props.messageIsOn ? 'block' : 'none'
+          }}
+          className="blinking"
+        >
+          Time Is Up
+        </p>
+        <p id="timer" style={{...this.props.pStyle, color: this.props.messageIsOn ? 'red' : 'white'}}>
+          {this.props.time}
         </p>
       </div>
     )
@@ -61,15 +76,20 @@ const mapStateToProps = state => ({
   duration: state.timer.duration,
   time: state.timer.time,
   pStyle: state.timer.pStyle,
+  containerStyle: state.timer.containerStyle,
   timerRunning: state.timer.timerRunning,
-  timerInterval: state.timer.timerInterval
+  timerInterval: state.timer.timerInterval,
+  messageIsOn: state.timer.messageIsOn
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateTimer: (time, duration) => {
+  updateTimer: (time, hours, minutes, seconds, duration) => {
     dispatch({
       type: 'UPDATE_TIMER',
       time,
+      hours,
+      minutes,
+      seconds,
       duration
     })
   },
@@ -78,6 +98,14 @@ const mapDispatchToProps = dispatch => ({
       type: 'SET_TIMER_INTERVAL',
       interval
     })
+  },
+  toggleMessage: () => {
+    dispatch({
+      type: 'TOGGLE_MESSAGE'
+    })
+  },
+  pauseTimer: () => {
+    dispatch({ type: 'PAUSE_TIMER' })
   }
 })
 
