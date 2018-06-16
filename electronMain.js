@@ -20,6 +20,8 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile('./build/index.html')
+  // mainWindow.loadURL('http://localhost:3000')
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -55,22 +57,22 @@ function createWindow() {
       ]
     },
     //add dev tools in development mode
-    process.env.NODE_ENV !== 'production' && {
-      label: 'Developer Tools',
-      submenu: [
-        {
-          label: 'Toggle DevTools',
-          accelerator:
-            process.platform == 'darwin' ? 'Command+Alt+J' : 'Ctrl+Alt+J,',
-          click(item, focusedWindow) {
-            focusedWindow.toggleDevTools()
-          }
-        },
-        {
-          role: 'reload'
-        }
-      ]
-    }
+    // process.env.NODE_ENV !== 'production' && {
+    //   label: 'Developer Tools',
+    //   submenu: [
+    //     {
+    //       label: 'Toggle DevTools',
+    //       accelerator:
+    //         process.platform == 'darwin' ? 'Command+Alt+J' : 'Ctrl+Alt+J,',
+    //       click(item, focusedWindow) {
+    //         focusedWindow.toggleDevTools()
+    //       }
+    //     },
+    //     {
+    //       role: 'reload'
+    //     }
+    //   ]
+    // }
   ])
   Menu.setApplicationMenu(menu)
 }
@@ -92,8 +94,9 @@ function createPreferensecWindow() {
   })
 
   // and load the index.html of the app.
-  preferencesWin.loadFile('./build/index.html/preferences')
+  preferencesWin.loadFile('./build/index.html')
   // preferencesWin.loadURL('http://localhost:3000/preferences')
+  // preferencesWin.loadURL('file://./build/index.html')
 
   // Open the DevTools.
   // preferencesWin.webContents.openDevTools()
