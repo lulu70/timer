@@ -1,5 +1,5 @@
 const initialState = {
-  visible: true,
+  visible: false,
   buttons: [],
   settingIconStyle: {
     position: 'absolute',

@@ -2,17 +2,21 @@
   "name": "timer",
   "version": "0.1.0",
   "private": true,
+  "ProductName": "timer",
   "homepage": "./",
   "devDependencies": {
     "electron": "^2.0.2",
+    "electron-packager": "^12.1.0",
     "react-scripts": "1.1.4"
   },
   "dependencies": {
     "moment": "^2.22.2",
     "rc-time-picker": "^3.3.1",
     "react": "^16.4.0",
+    "react-color": "^2.14.1",
     "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",
+    "react-sound": "^1.2.0",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.2",
     "semantic-ui-css": "^2.3.1",
@@ -25,6 +29,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "electron": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=./assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . timer --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"timer\"",
+    "package-linux": "electron-packager . timer--overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   }
 }

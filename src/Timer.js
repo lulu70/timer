@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './App.css'
 import { connect } from 'react-redux'
+import Sound from 'react-sound'
+import chimes from './assets/chimes.mp3'
 
 class Timer extends Component {
   componentDidUpdate(prevProps) {
@@ -51,20 +53,30 @@ class Timer extends Component {
   render() {
     return (
       <div id="timerContainer" style={this.props.containerStyle}>
+        {this.props.messageIsOn && (
+          <div>
+            <p
+              id="message"
+              style={{
+                ...this.props.pStyle,
+                fontSize: '10vh',
+                letterSpacing: '1vh',
+                color: 'red'
+              }}
+              className="blinking"
+            >
+              Time Is Up
+            </p>
+            <Sound url={chimes} playStatus={Sound.status.PLAYING} />
+          </div>
+        )}
         <p
-          id="message"
+          id="timer"
           style={{
             ...this.props.pStyle,
-            fontSize: '10vh',
-            letterSpacing: '1vh',
-            color: 'red',
-            display: this.props.messageIsOn ? 'block' : 'none'
+            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color 
           }}
-          className="blinking"
         >
-          Time Is Up
-        </p>
-        <p id="timer" style={{...this.props.pStyle, color: this.props.messageIsOn ? 'red' : 'white'}}>
           {this.props.time}
         </p>
       </div>
@@ -79,7 +91,7 @@ const mapStateToProps = state => ({
   containerStyle: state.timer.containerStyle,
   timerRunning: state.timer.timerRunning,
   timerInterval: state.timer.timerInterval,
-  messageIsOn: state.timer.messageIsOn
+  messageIsOn: state.timer.messageIsOn,
 })
 
 const mapDispatchToProps = dispatch => ({

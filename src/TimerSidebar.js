@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Sidebar, Menu, Icon, Button, Label } from 'semantic-ui-react'
+import { Sidebar, Menu, Icon, Button, Label, Popup } from 'semantic-ui-react'
 import Timer from './Timer'
 import 'rc-time-picker/assets/index.css'
 import TimePicker from 'rc-time-picker'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
+import { SketchPicker } from 'react-color'
 
 class TimerSidebar extends Component {
   toggleVisibility = () => this.props.toggleVisibility()
@@ -90,6 +91,12 @@ class TimerSidebar extends Component {
     )
     this.handlePlayPauseClick()
   }
+  handleBGColorChange = color => {
+    this.props.changeBGColor(color.hex)
+  }
+  handleTextColorChange = color => {
+    this.props.changeTextColor(color.hex)
+  }
   render() {
     const { visible, settingIconStyle } = this.props
     return (
@@ -105,7 +112,7 @@ class TimerSidebar extends Component {
             color: this.props.messageIsOn && 'red'
           }}
         />
-        <Sidebar.Pushable style={{ background: 'black' }}>
+        <Sidebar.Pushable style={{ background: this.props.bgColor }}>
           <Sidebar
             as={Menu}
             animation="scale down"
@@ -131,6 +138,19 @@ class TimerSidebar extends Component {
                 onChange={this.handleTimerPickerChange}
               />
             </Menu.Item>
+            {this.props.duration >= 0 && (
+              <div>
+                <Menu.Item name="playPause" onClick={this.handlePlayPauseClick}>
+                  <Icon name={this.props.timerRunning ? 'pause' : 'play'} />
+                </Menu.Item>
+                <Menu.Item
+                  name="save to a button"
+                  onClick={this.handleSaveButtonClick}
+                >
+                  <Icon name="save" />
+                </Menu.Item>
+              </div>
+            )}
             <Menu.Item
               name="resetToLastValue"
               onClick={this.hadleResetToLastValueClick}
@@ -142,17 +162,28 @@ class TimerSidebar extends Component {
               name="Reset To Zero"
               onClick={this.handleResetClick}
             />
-            {this.props.duration >= 0 && (
-              <div>
-                <Menu.Item name="playPause" onClick={this.handlePlayPauseClick}>
-                  <Icon name={this.props.timerRunning ? 'pause' : 'play'} />
-                </Menu.Item>
-                <Menu.Item
-                  name="save to a button"
-                  onClick={this.handleSaveButtonClick}
-                />
-              </div>
-            )}
+
+            <Popup
+              trigger={<Menu.Item as="a" name="Background color" />}
+              on="click"
+              basic
+            >
+              <SketchPicker
+                onChangeComplete={this.handleBGColorChange}
+                color={this.props.bgColor}
+              />
+            </Popup>
+
+            <Popup
+              trigger={<Menu.Item as="a" name="text color" />}
+              on="click"
+              basic
+            >
+              <SketchPicker
+                onChangeComplete={this.handleTextColorChange}
+                color={this.props.pStyle.color}
+              />
+            </Popup>
             {this.props.buttons.map((button, i) => (
               <Menu.Item key={i}>
                 <Label
@@ -199,7 +230,9 @@ const mapStateToProps = state => ({
   seconds: state.timer.seconds,
   messageIsOn: state.timer.messageIsOn,
   timePickerStyle: state.timerSidebar.timePickerStyle,
-  buttons: state.timerSidebar.buttons
+  buttons: state.timerSidebar.buttons,
+  bgColor: state.timer.bgColor,
+  pStyle: state.timer.pStyle
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -243,6 +276,18 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: 'DELETE_BUTTON',
       index
+    })
+  },
+  changeBGColor: color => {
+    dispatch({
+      type: 'CHANGE_BG_COLOR',
+      color
+    })
+  },
+  changeTextColor: color => {
+    dispatch({
+      type: 'CHANGE_TEXT_COLOR',
+      color
     })
   }
 })
