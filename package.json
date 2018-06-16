@@ -10,12 +10,14 @@
     "react-scripts": "1.1.4"
   },
   "dependencies": {
+    "is-electron": "^2.1.0",
     "moment": "^2.22.2",
     "rc-time-picker": "^3.3.1",
     "react": "^16.4.0",
     "react-color": "^2.14.1",
     "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
     "react-sound": "^1.2.0",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.2",

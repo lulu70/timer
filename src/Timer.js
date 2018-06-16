@@ -5,6 +5,7 @@ import Sound from 'react-sound'
 import chimes from './assets/chimes.mp3'
 
 class Timer extends Component {
+
   componentDidUpdate(prevProps) {
     if (prevProps.timerRunning !== this.props.timerRunning) {
       this.props.timerRunning ? this.startTimer() : this.pauseTimer()
@@ -74,7 +75,7 @@ class Timer extends Component {
           id="timer"
           style={{
             ...this.props.pStyle,
-            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color 
+            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
           }}
         >
           {this.props.time}
@@ -91,7 +92,7 @@ const mapStateToProps = state => ({
   containerStyle: state.timer.containerStyle,
   timerRunning: state.timer.timerRunning,
   timerInterval: state.timer.timerInterval,
-  messageIsOn: state.timer.messageIsOn,
+  messageIsOn: state.timer.messageIsOn
 })
 
 const mapDispatchToProps = dispatch => ({

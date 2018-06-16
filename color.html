@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Color</title>
+</head>
+
+<body>
+    <h1>Choose Color</h1>
+    <input id="input" type="text">
+</body>
+<script>
+    const electron = require('electron')
+    const {
+        ipcRenderer
+    } = electron
+
+    let input = document.getElementById('input')
+    input.addEventListener('change', function () {
+        ipcRenderer.send('color',input.value)
+    })
+</script>
+
+</html>

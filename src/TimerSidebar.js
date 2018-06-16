@@ -1,14 +1,25 @@
 import React, { Component } from 'react'
-import { Sidebar, Menu, Icon, Button, Label, Popup } from 'semantic-ui-react'
+import { Sidebar, Menu, Icon, Button, Label } from 'semantic-ui-react'
 import Timer from './Timer'
 import 'rc-time-picker/assets/index.css'
 import TimePicker from 'rc-time-picker'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import { SketchPicker } from 'react-color'
+import isElectron from 'is-electron'
 
 class TimerSidebar extends Component {
+  componentDidMount() {
+    if (isElectron()) {
+      window.ipcRenderer.on('bgColor', (e, color) => {
+        this.props.changeBGColor(color)
+      })
+      window.ipcRenderer.on('textColor', (e, color) => {
+        this.props.changeTextColor(color)
+      })
+    }
+  }
+
   toggleVisibility = () => this.props.toggleVisibility()
 
   handleTimerPickerChange = value => {
@@ -109,7 +120,7 @@ class TimerSidebar extends Component {
           onClick={this.toggleVisibility}
           style={{
             ...settingIconStyle,
-            color: this.props.messageIsOn && 'red'
+            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
           }}
         />
         <Sidebar.Pushable style={{ background: this.props.bgColor }}>
@@ -139,17 +150,9 @@ class TimerSidebar extends Component {
               />
             </Menu.Item>
             {this.props.duration >= 0 && (
-              <div>
-                <Menu.Item name="playPause" onClick={this.handlePlayPauseClick}>
-                  <Icon name={this.props.timerRunning ? 'pause' : 'play'} />
-                </Menu.Item>
-                <Menu.Item
-                  name="save to a button"
-                  onClick={this.handleSaveButtonClick}
-                >
-                  <Icon name="save" />
-                </Menu.Item>
-              </div>
+              <Menu.Item name="playPause" onClick={this.handlePlayPauseClick}>
+                <Icon name={this.props.timerRunning ? 'pause' : 'play'} />
+              </Menu.Item>
             )}
             <Menu.Item
               name="resetToLastValue"
@@ -157,33 +160,17 @@ class TimerSidebar extends Component {
             >
               <Icon name="undo" />
             </Menu.Item>
-            <Menu.Item
-              as="a"
-              name="Reset To Zero"
-              onClick={this.handleResetClick}
-            />
-
-            <Popup
-              trigger={<Menu.Item as="a" name="Background color" />}
-              on="click"
-              basic
-            >
-              <SketchPicker
-                onChangeComplete={this.handleBGColorChange}
-                color={this.props.bgColor}
-              />
-            </Popup>
-
-            <Popup
-              trigger={<Menu.Item as="a" name="text color" />}
-              on="click"
-              basic
-            >
-              <SketchPicker
-                onChangeComplete={this.handleTextColorChange}
-                color={this.props.pStyle.color}
-              />
-            </Popup>
+            <Menu.Item as="a" onClick={this.handleResetClick}>
+              00:00
+            </Menu.Item>
+            {this.props.duration >= 0 && (
+              <Menu.Item
+                name="save to a button"
+                onClick={this.handleSaveButtonClick}
+              >
+                <Icon name="save" />
+              </Menu.Item>
+            )}
             {this.props.buttons.map((button, i) => (
               <Menu.Item key={i}>
                 <Label
