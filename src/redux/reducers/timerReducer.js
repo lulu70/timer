@@ -1,5 +1,5 @@
 const initialState = {
-  remoteTimer: true,
+  twoScreenMode: true,
   duration: 5 * 60 - 1,
   time: '05:00',
   hours: '0',
@@ -53,35 +53,13 @@ const timerReducer = (state = initialState, action) => {
     case 'TOGGLE_MESSAGE': {
       return { ...state, messageIsOn: !state.messageIsOn }
     }
-    case 'CHANGE_BG_COLOR': {
-      return {
-        ...state,
-        containerStyle: { ...state.containerStyle, background: action.color },
-        bgColor: action.color
-      }
-    }
-    case 'CHANGE_TEXT_COLOR': {
-      return {
-        ...state,
-        pStyle: {
-          ...state.pStyle,
-          color: action.color
-        }
-      }
-    }
-    case 'TIMER_FROM_PREFERENCES': {
+    case 'TIMER_FROM_CONTROLLER': {
       return action.timer
-    }
-    case 'INTERVAL_FROM_TIMER': {
-      return {
-        ...state,
-        timerInterval: action.interval
-      }
     }
     case 'SET_APP_MODE': {
       return {
         ...state,
-        remoteTimer: action.mode
+        twoScreenMode: action.mode
       }
     }
     default: {

@@ -11,7 +11,7 @@ const initialState = {
 
 const timerSidebarReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'TIMER_SIDEBAR_TOGGLE_VISIBILITY': {
+    case 'TOGGLE_SIDEBAR_VISIBILITY': {
       return {
         ...state,
         visible: !state.visible

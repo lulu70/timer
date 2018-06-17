@@ -5,14 +5,13 @@ import 'rc-time-picker/assets/index.css'
 import TimePicker from 'rc-time-picker'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import uuid from 'uuid'
 import isElectron from 'is-electron'
 
 class TimerSidebar extends Component {
   componentDidMount() {
     if (isElectron()) {
       window.ipcRenderer.on('timer', (e, timer) => {
-        this.props.timerFromPreferences(timer)
+        this.props.timerFromController(timer)
       })
       window.ipcRenderer.on('twoScreenMode', (e, mode) => {
         this.props.setAppMode(mode)
@@ -20,7 +19,7 @@ class TimerSidebar extends Component {
     }
   }
 
-  toggleVisibility = () => this.props.toggleVisibility()
+  toogleSidebarVisibility = () => this.props.toogleSidebarVisibility()
 
   handleTimerPickerChange = value => {
     this.props.timerRunning && this.props.pauseTimer()
@@ -45,7 +44,7 @@ class TimerSidebar extends Component {
       this.props.pauseTimer()
     } else {
       this.props.playTimer()
-      this.props.toggleVisibility()
+      this.props.toogleSidebarVisibility()
     }
   }
 
@@ -102,25 +101,18 @@ class TimerSidebar extends Component {
     )
     this.handlePlayPauseClick()
   }
-  handleBGColorChange = color => {
-    this.props.changeBGColor(color.hex)
-  }
-  handleTextColorChange = color => {
-    this.props.changeTextColor(color.hex)
-  }
   render() {
-    const { visible, settingIconStyle } = this.props
     return (
       <div id="sidebarContainer">
-        {!this.props.remoteTimer && (
+        {!this.props.twoScreenMode && (
           <Icon
             inverted
             id="settings"
             size="large"
             name="setting"
-            onClick={this.toggleVisibility}
+            onClick={this.toogleSidebarVisibility}
             style={{
-              ...settingIconStyle,
+              ...this.props.settingIconStyle,
               color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
             }}
           />
@@ -131,7 +123,7 @@ class TimerSidebar extends Component {
             animation="scale down"
             width="thin"
             direction="right"
-            visible={visible}
+            visible={this.props.visible}
             icon="labeled"
             vertical
             inverted
@@ -222,13 +214,13 @@ const mapStateToProps = state => ({
   buttons: state.timerSidebar.buttons,
   bgColor: state.timer.bgColor,
   pStyle: state.timer.pStyle,
-  remoteTimer: state.timer.remoteTimer
+  twoScreenMode: state.timer.twoScreenMode
 })
 
 const mapDispatchToProps = dispatch => ({
-  toggleVisibility: () => {
+  toogleSidebarVisibility: () => {
     dispatch({
-      type: 'TIMER_SIDEBAR_TOGGLE_VISIBILITY'
+      type: 'TOGGLE_SIDEBAR_VISIBILITY'
     })
   },
   playTimer: () => {
@@ -255,7 +247,6 @@ const mapDispatchToProps = dispatch => ({
   addButton: (time, hours, minutes, seconds) => {
     dispatch({
       type: 'ADD_BUTTON',
-      id: uuid.v4(),
       time,
       hours,
       minutes,
@@ -268,21 +259,9 @@ const mapDispatchToProps = dispatch => ({
       index
     })
   },
-  changeBGColor: color => {
+  timerFromController: timer => {
     dispatch({
-      type: 'CHANGE_BG_COLOR',
-      color
-    })
-  },
-  changeTextColor: color => {
-    dispatch({
-      type: 'CHANGE_TEXT_COLOR',
-      color
-    })
-  },
-  timerFromPreferences: timer => {
-    dispatch({
-      type: 'TIMER_FROM_PREFERENCES',
+      type: 'TIMER_FROM_CONTROLLER',
       timer
     })
   },

@@ -6,13 +6,10 @@ import registerServiceWorker from './registerServiceWorker'
 import 'semantic-ui-css/semantic.min.css'
 import store from './redux/redux.js'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router } from 'react-router-dom'
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </Provider>,
   document.getElementById('root')
 )

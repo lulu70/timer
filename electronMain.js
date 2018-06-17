@@ -1,12 +1,12 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let controllerWindow
 
-function createWindow() {
+const createMainWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 640,
@@ -18,6 +18,7 @@ function createWindow() {
   })
 
   // and load the index.html of the app.
+
   // mainWindow.loadFile('./build/index.html')
   mainWindow.loadURL('http://localhost:3000')
 
@@ -25,41 +26,34 @@ function createWindow() {
   // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    // app.quit()
+    app.quit()
     mainWindow = null
   })
   mainWindow.setPosition(760, 190)
+
   const menu = Menu.buildFromTemplate([
     {
       label: 'Timer',
       submenu: [
         {
           label: 'One Screen Mode',
-          accelerator: process.platform == 'darwin' ? '1' : '1',
+          accelerator: process.platform == 'darwin' ? 'Command+1' : 'Ctrl+1',
           click() {
-            if (mainWindow == null) {
-              createWindow()
-            }
-            if (preferencesWin != null) {
-              preferencesWin.close()
-            }
+            mainWindow == null && createMainWindow()
+            controllerWindow != null && controllerWindow.close()
             mainWindow.webContents.send('twoScreenMode', false)
           }
         },
         {
           label: 'Two Screen Mode',
-          accelerator: process.platform == 'darwin' ? '2' : '2',
+          accelerator: process.platform == 'darwin' ? 'Command+2' : 'Ctrl+2',
           click() {
-            if (mainWindow == null) {
-              createWindow()
-            }
-            if (preferencesWin == null) {
-              createPreferensecWindow()
-            }
+            mainWindow == null && createMainWindow()
+            controllerWindow == null && createControllerWindow()
             mainWindow.webContents.send('twoScreenMode', true)
           }
         },
@@ -67,7 +61,7 @@ function createWindow() {
           type: 'separator'
         },
         {
-          label: 'Close Timer',
+          label: 'Close...',
           accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
           click() {
             const window = BrowserWindow.getFocusedWindow()
@@ -75,7 +69,7 @@ function createWindow() {
           }
         },
         {
-          label: 'Quit Timer',
+          label: 'Quit...',
           accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
           click() {
             app.quit()
@@ -87,65 +81,58 @@ function createWindow() {
   Menu.setApplicationMenu(menu)
 }
 
-// Create the preferences Window...
-let preferencesWin
-
-function createPreferensecWindow() {
+const createControllerWindow = () => {
   // Create the browser window.
-  preferencesWin = new BrowserWindow({
+  controllerWindow = new BrowserWindow({
     width: 680,
     height: 500,
     resizable: false,
     webPreferences: {
       nodeIntegration: false,
       preload: __dirname + '/preload.js'
-    },
-    title: 'Preferences'
+    }
   })
 
   // and load the index.html of the app.
-  // preferencesWin.loadFile('./build/index.html')
-  preferencesWin.loadURL('http://localhost:3002')
-  // preferencesWin.loadURL('file://./build/index.html')
+  // controllerWindow.loadFile('./build/index.html')
+  controllerWindow.loadURL('http://localhost:3002')
+  // controllerWindow.loadURL('file://./build/index.html')
 
   // Open the DevTools.
-  // preferencesWin.webContents.openDevTools()
+  // controllerWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  preferencesWin.on('closed', function() {
+  controllerWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    preferencesWin = null
+    controllerWindow = null
   })
-  preferencesWin.setPosition(37, 115)
+  controllerWindow.setPosition(37, 115)
 }
 
-//catch messages from preferences window
-
-ipcMain.on('timer', function(e, timer) {
+//catch messages from controller window
+ipcMain.on('timer', (e, timer) => {
   mainWindow.webContents.send('timer', timer)
 })
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function() {
-  createWindow()
-  createPreferensecWindow()
+app.on('ready', () => {
+  createMainWindow()
+  createControllerWindow()
 })
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (!process.platform == 'darwin') app.quit()
+  app.quit()
 })
 
-// app.on('activate', function() {
+// app.on('activate', () => {
 //   // On OS X it's common to re-create a window in the app when the
 //   // dock icon is clicked and there are no other windows open.
-//   if (mainWindow === null) {
-//     createWindow()
-//   }
+//   mainWindow === null && createMainWindow()
 // })
