@@ -6,6 +6,7 @@ import TimePicker from 'rc-time-picker'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import isElectron from 'is-electron'
+import throttle from 'lodash/throttle'
 
 class TimerSidebar extends Component {
   componentDidMount() {
@@ -16,6 +17,29 @@ class TimerSidebar extends Component {
       window.ipcRenderer.on('twoScreenMode', (e, mode) => {
         this.props.setAppMode(mode)
       })
+    }
+    this.getStateFromLocalStorage()
+  }
+
+  componentDidUpdate() {
+    this.saveStateToLocalStorage()
+  }
+
+  saveStateToLocalStorage = throttle(() => {
+    try {
+      localStorage.setItem('buttons', JSON.stringify(this.props.buttons))
+    } catch (error) {
+      console.error(error)
+    }
+  }, 1000)
+
+  getStateFromLocalStorage = () => {
+    try {
+      const localStorageState = localStorage.getItem('buttons')
+      localStorageState &&
+        this.props.setStateFromLocalStorage(JSON.parse(localStorageState))
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -269,6 +293,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: 'SET_APP_MODE',
       mode
+    })
+  },
+  setStateFromLocalStorage: buttons => {
+    dispatch({
+      type: 'SET_STATE_FROM_LOCAL_STORAGE',
+      buttons
     })
   }
 })
