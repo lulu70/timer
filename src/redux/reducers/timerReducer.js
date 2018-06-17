@@ -8,6 +8,7 @@ const initialState = {
   timerRunning: false,
   timerInterval: '',
   messageIsOn: false,
+  warningColor: 'red',
   pStyle: {
     fontSize: '20vw',
     letterSpacing: '2vw',

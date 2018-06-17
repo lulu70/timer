@@ -8,24 +8,18 @@ html body {
 
 @keyframes blinkingText {
     0% {
-        color: red;
-    }
-    49% {
-        color: transparent;
+        opacity: 0;
     }
     50% {
-        color: transparent;
-    }
-    51% {
-        color: transparent;
+        opacity: 100;
     }
     100% {
-        color: red;
+        opacity: 0;
     }
 }
 
-.timePicker input{
-    color:white;
+.timePicker input {
+    color: white;
     background: black;
     font-size: 20px;
     height: 35px;

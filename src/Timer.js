@@ -64,7 +64,7 @@ class Timer extends Component {
                 ...this.props.pStyle,
                 fontSize: '10vh',
                 letterSpacing: '1vh',
-                color: 'red'
+                color: this.props.warningColor,
               }}
               className="blinking"
             >
@@ -77,7 +77,7 @@ class Timer extends Component {
           id="timer"
           style={{
             ...this.props.pStyle,
-            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
+            color: this.props.messageIsOn ? this.props.warningColor : this.props.pStyle.color
           }}
         >
           {this.props.time}
@@ -95,7 +95,8 @@ const mapStateToProps = state => ({
   timerRunning: state.timer.timerRunning,
   timerInterval: state.timer.timerInterval,
   messageIsOn: state.timer.messageIsOn,
-  twoScreenMode: state.timer.twoScreenMode
+  twoScreenMode: state.timer.twoScreenMode,
+  warningColor: state.timer.warningColor
 })
 
 const mapDispatchToProps = dispatch => ({
