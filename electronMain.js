@@ -1,7 +1,6 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
-const path = require('path')
-const url = require('url')
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -19,8 +18,8 @@ function createWindow() {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./build/index.html')
-  // mainWindow.loadURL('http://localhost:3000')
+  // mainWindow.loadFile('./build/index.html')
+  mainWindow.loadURL('http://localhost:3000')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -30,22 +29,50 @@ function createWindow() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    app.quit()
+    // app.quit()
     mainWindow = null
   })
+  mainWindow.setPosition(760, 190)
   const menu = Menu.buildFromTemplate([
     {
       label: 'Timer',
       submenu: [
         {
-          label: 'Preferences...',
-          accelerator: process.platform == 'darwin' ? 'Command+,' : 'Ctrl+,',
+          label: 'One Screen Mode',
+          accelerator: process.platform == 'darwin' ? '1' : '1',
           click() {
-            preferencesWin == null && createPreferensecWindow()
+            if (mainWindow == null) {
+              createWindow()
+            }
+            if (preferencesWin != null) {
+              preferencesWin.close()
+            }
+            mainWindow.webContents.send('twoScreenMode', false)
+          }
+        },
+        {
+          label: 'Two Screen Mode',
+          accelerator: process.platform == 'darwin' ? '2' : '2',
+          click() {
+            if (mainWindow == null) {
+              createWindow()
+            }
+            if (preferencesWin == null) {
+              createPreferensecWindow()
+            }
+            mainWindow.webContents.send('twoScreenMode', true)
           }
         },
         {
           type: 'separator'
+        },
+        {
+          label: 'Close Timer',
+          accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
+          click() {
+            const window = BrowserWindow.getFocusedWindow()
+            window.close()
+          }
         },
         {
           label: 'Quit Timer',
@@ -55,24 +82,7 @@ function createWindow() {
           }
         }
       ]
-    },
-    //add dev tools in development mode
-    // process.env.NODE_ENV !== 'production' && {
-    //   label: 'Developer Tools',
-    //   submenu: [
-    //     {
-    //       label: 'Toggle DevTools',
-    //       accelerator:
-    //         process.platform == 'darwin' ? 'Command+Alt+J' : 'Ctrl+Alt+J,',
-    //       click(item, focusedWindow) {
-    //         focusedWindow.toggleDevTools()
-    //       }
-    //     },
-    //     {
-    //       role: 'reload'
-    //     }
-    //   ]
-    // }
+    }
   ])
   Menu.setApplicationMenu(menu)
 }
@@ -94,8 +104,8 @@ function createPreferensecWindow() {
   })
 
   // and load the index.html of the app.
-  preferencesWin.loadFile('./build/index.html')
-  // preferencesWin.loadURL('http://localhost:3000/preferences')
+  // preferencesWin.loadFile('./build/index.html')
+  preferencesWin.loadURL('http://localhost:3002')
   // preferencesWin.loadURL('file://./build/index.html')
 
   // Open the DevTools.
@@ -108,33 +118,34 @@ function createPreferensecWindow() {
     // when you should delete the corresponding element.
     preferencesWin = null
   })
+  preferencesWin.setPosition(37, 115)
 }
 
-//catch color from picker
-ipcMain.on('bgColor', function(e, color) {
-  mainWindow.webContents.send('bgColor', color)
-})
+//catch messages from preferences window
 
-ipcMain.on('textColor', function(e, color) {
-  mainWindow.webContents.send('textColor', color)
+ipcMain.on('timer', function(e, timer) {
+  mainWindow.webContents.send('timer', timer)
 })
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', function() {
+  createWindow()
+  createPreferensecWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  app.quit()
+  if (!process.platform == 'darwin') app.quit()
 })
 
-app.on('activate', function() {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+// app.on('activate', function() {
+//   // On OS X it's common to re-create a window in the app when the
+//   // dock icon is clicked and there are no other windows open.
+//   if (mainWindow === null) {
+//     createWindow()
+//   }
+// })

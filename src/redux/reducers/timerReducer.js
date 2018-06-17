@@ -1,4 +1,5 @@
 const initialState = {
+  remoteTimer: true,
   duration: 5 * 60 - 1,
   time: '05:00',
   hours: '0',
@@ -28,7 +29,14 @@ const initialState = {
 const timerReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_TIMER': {
-      return { ...state, duration: action.duration, time: action.time, hours: action.hours, minutes: action.minutes, seconds: action.seconds }
+      return {
+        ...state,
+        duration: action.duration,
+        time: action.time,
+        hours: action.hours,
+        minutes: action.minutes,
+        seconds: action.seconds
+      }
     }
     case 'SET_DURATION': {
       return { ...state, duration: action.duration }
@@ -46,12 +54,35 @@ const timerReducer = (state = initialState, action) => {
       return { ...state, messageIsOn: !state.messageIsOn }
     }
     case 'CHANGE_BG_COLOR': {
-      return { ...state, containerStyle: { ...state.containerStyle, background: action.color }, bgColor: action.color }
+      return {
+        ...state,
+        containerStyle: { ...state.containerStyle, background: action.color },
+        bgColor: action.color
+      }
     }
     case 'CHANGE_TEXT_COLOR': {
-      return { ...state, pStyle: {
-        ...state.pStyle, color: action.color
-      } }
+      return {
+        ...state,
+        pStyle: {
+          ...state.pStyle,
+          color: action.color
+        }
+      }
+    }
+    case 'TIMER_FROM_PREFERENCES': {
+      return action.timer
+    }
+    case 'INTERVAL_FROM_TIMER': {
+      return {
+        ...state,
+        timerInterval: action.interval
+      }
+    }
+    case 'SET_APP_MODE': {
+      return {
+        ...state,
+        remoteTimer: action.mode
+      }
     }
     default: {
       return state

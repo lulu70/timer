@@ -3,12 +3,15 @@ import './App.css'
 import { connect } from 'react-redux'
 import Sound from 'react-sound'
 import chimes from './assets/chimes.mp3'
+// import isElectron from 'is-electron'
 
 class Timer extends Component {
 
   componentDidUpdate(prevProps) {
-    if (prevProps.timerRunning !== this.props.timerRunning) {
-      this.props.timerRunning ? this.startTimer() : this.pauseTimer()
+    if(!this.props.remoteTimer){
+      if (prevProps.timerRunning !== this.props.timerRunning) {
+        this.props.timerRunning ? this.startTimer() : this.pauseTimer()
+      }
     }
   }
 
@@ -92,7 +95,8 @@ const mapStateToProps = state => ({
   containerStyle: state.timer.containerStyle,
   timerRunning: state.timer.timerRunning,
   timerInterval: state.timer.timerInterval,
-  messageIsOn: state.timer.messageIsOn
+  messageIsOn: state.timer.messageIsOn,
+  remoteTimer: state.timer.remoteTimer
 })
 
 const mapDispatchToProps = dispatch => ({

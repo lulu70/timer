@@ -7,12 +7,12 @@ import { Popup, Label, Segment, Divider } from 'semantic-ui-react'
 class Preferences extends Component {
   handleBGColorChange = color => {
     this.props.changeBGColor(color.hex)
-    isElectron() && window.ipcRenderer.send('bgColor', color.hex)
+    // isElectron() && window.ipcRenderer.send('bgColor', color.hex)
   }
 
   handleTextColorChange = color => {
     this.props.changeTextColor(color.hex)
-    isElectron() && window.ipcRenderer.send('textColor', color.hex)
+    // isElectron() && window.ipcRenderer.send('textColor', color.hex)
   }
   render() {
     return (

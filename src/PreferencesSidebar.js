@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Sidebar, Menu, Icon, Button, Label } from 'semantic-ui-react'
-import Timer from './Timer'
+import Preferences from './Preferences'
 import 'rc-time-picker/assets/index.css'
 import TimePicker from 'rc-time-picker'
 import moment from 'moment'
@@ -9,17 +9,23 @@ import uuid from 'uuid'
 import isElectron from 'is-electron'
 
 class TimerSidebar extends Component {
-  componentDidMount() {
+  //   componentDidMount() {
+  //     if (isElectron()) {
+  //       window.ipcRenderer.on('bgColor', (e, color) => {
+  //         this.props.changeBGColor(color)
+  //       })
+  //       window.ipcRenderer.on('textColor', (e, color) => {
+  //         this.props.changeTextColor(color)
+  //       })
+  //     }
+  //   }
+ componentDidMount() {
     if (isElectron()) {
-      window.ipcRenderer.on('timer', (e, timer) => {
-        this.props.timerFromPreferences(timer)
-      })
-      window.ipcRenderer.on('twoScreenMode', (e, mode) => {
-        this.props.setAppMode(mode)
+      window.ipcRenderer.on('interval', (e, interval) => {
+        this.props.intervalFromTimer(interval)
       })
     }
   }
-
   toggleVisibility = () => this.props.toggleVisibility()
 
   handleTimerPickerChange = value => {
@@ -109,22 +115,22 @@ class TimerSidebar extends Component {
     this.props.changeTextColor(color.hex)
   }
   render() {
+
+    isElectron() && window.ipcRenderer.send('timer', this.props.timer)
     const { visible, settingIconStyle } = this.props
     return (
       <div id="sidebarContainer">
-        {!this.props.remoteTimer && (
-          <Icon
-            inverted
-            id="settings"
-            size="large"
-            name="setting"
-            onClick={this.toggleVisibility}
-            style={{
-              ...settingIconStyle,
-              color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
-            }}
-          />
-        )}
+        <Icon
+          inverted
+          id="settings"
+          size="large"
+          name="setting"
+          onClick={this.toggleVisibility}
+          style={{
+            ...settingIconStyle,
+            color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
+          }}
+        />
         <Sidebar.Pushable style={{ background: this.props.bgColor }}>
           <Sidebar
             as={Menu}
@@ -200,7 +206,7 @@ class TimerSidebar extends Component {
             ))}
           </Sidebar>
           <Sidebar.Pusher>
-            <Timer />
+            <Preferences />
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>
@@ -222,7 +228,7 @@ const mapStateToProps = state => ({
   buttons: state.timerSidebar.buttons,
   bgColor: state.timer.bgColor,
   pStyle: state.timer.pStyle,
-  remoteTimer: state.timer.remoteTimer
+  timer:state.timer
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -280,17 +286,11 @@ const mapDispatchToProps = dispatch => ({
       color
     })
   },
-  timerFromPreferences: timer => {
-    dispatch({
-      type: 'TIMER_FROM_PREFERENCES',
-      timer
-    })
-  },
-  setAppMode: mode => {
-    dispatch({
-      type: 'SET_APP_MODE',
-      mode
-    })
+  intervalFromTimer: interval => {
+      dispatch({
+          type: 'INTERVAL_FROM_TIMER',
+          interval
+      })
   }
 })
 
