@@ -39,7 +39,7 @@ class Timer extends Component {
         duration
       )
       timer = timer - 1
-      //when time is up 
+      //when time is up
       if (timer < 0) {
         this.props.pauseTimer()
         this.pauseTimer()
@@ -55,7 +55,10 @@ class Timer extends Component {
 
   render() {
     return (
-      <div id="timerContainer" style={this.props.containerStyle}>
+      <div
+        id="timerContainer"
+        style={{ ...this.props.containerStyle, background: this.props.bgColor }}
+      >
         {this.props.messageIsOn && (
           <div>
             <p
@@ -64,7 +67,7 @@ class Timer extends Component {
                 ...this.props.pStyle,
                 fontSize: '10vh',
                 letterSpacing: '1vh',
-                color: this.props.warningColor,
+                color: this.props.warningColor
               }}
               className="blinking"
             >
@@ -77,7 +80,9 @@ class Timer extends Component {
           id="timer"
           style={{
             ...this.props.pStyle,
-            color: this.props.messageIsOn ? this.props.warningColor : this.props.pStyle.color
+            color: this.props.messageIsOn
+              ? this.props.warningColor
+              : this.props.pStyle.color
           }}
         >
           {this.props.time}

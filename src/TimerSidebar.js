@@ -27,7 +27,14 @@ class TimerSidebar extends Component {
 
   saveStateToLocalStorage = throttle(() => {
     try {
-      localStorage.setItem('buttons', JSON.stringify(this.props.buttons))
+      localStorage.setItem('state', JSON.stringify({
+        colors: {
+          bgColor: this.props.bgColor,
+          textColor: this.props.pStyle.color,
+          warningColor: this.props.warningColor
+        },
+        buttons: this.props.buttons
+      }))
     } catch (error) {
       console.error(error)
     }
@@ -35,7 +42,7 @@ class TimerSidebar extends Component {
 
   getStateFromLocalStorage = () => {
     try {
-      const localStorageState = localStorage.getItem('buttons')
+      const localStorageState = localStorage.getItem('state')
       localStorageState &&
         this.props.setStateFromLocalStorage(JSON.parse(localStorageState))
     } catch (error) {
@@ -238,7 +245,8 @@ const mapStateToProps = state => ({
   buttons: state.timerSidebar.buttons,
   bgColor: state.timer.bgColor,
   pStyle: state.timer.pStyle,
-  twoScreenMode: state.timer.twoScreenMode
+  twoScreenMode: state.timer.twoScreenMode,
+  warningColor: state.timer.warningColor
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -295,10 +303,13 @@ const mapDispatchToProps = dispatch => ({
       mode
     })
   },
-  setStateFromLocalStorage: buttons => {
+  setStateFromLocalStorage: state => {
     dispatch({
       type: 'SET_STATE_FROM_LOCAL_STORAGE',
-      buttons
+      bgColor: state.colors.bgColor,
+      warningColor: state.colors.warningColor,
+      textColor: state.colors.textColor,
+      buttons: state.buttons
     })
   }
 })

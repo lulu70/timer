@@ -1,5 +1,5 @@
 const initialState = {
-  twoScreenMode: true,
+  twoScreenMode: false,
   duration: 5 * 60 - 1,
   time: '05:00',
   hours: '0',
@@ -61,6 +61,17 @@ const timerReducer = (state = initialState, action) => {
       return {
         ...state,
         twoScreenMode: action.mode
+      }
+    }
+    case 'SET_STATE_FROM_LOCAL_STORAGE': {
+      return {
+        ...state,
+        warningColor: action.warningColor,
+        bgColor: action.bgColor,
+        pStyle: {
+          ...state.pStyle,
+          color: action.textColor
+        }
       }
     }
     default: {
