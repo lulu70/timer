@@ -27,14 +27,17 @@ class TimerSidebar extends Component {
 
   saveStateToLocalStorage = throttle(() => {
     try {
-      localStorage.setItem('state', JSON.stringify({
-        colors: {
-          bgColor: this.props.bgColor,
-          textColor: this.props.pStyle.color,
-          warningColor: this.props.warningColor
-        },
-        buttons: this.props.buttons
-      }))
+      localStorage.setItem(
+        'state',
+        JSON.stringify({
+          colors: {
+            bgColor: this.props.bgColor,
+            textColor: this.props.pStyle.color,
+            warningColor: this.props.warningColor
+          },
+          buttons: this.props.buttons
+        })
+      )
     } catch (error) {
       console.error(error)
     }
@@ -198,26 +201,26 @@ class TimerSidebar extends Component {
             )}
             {this.props.buttons.map((button, i) => (
               <Menu.Item key={i}>
-                <Label
-                  as="a"
-                  size="mini"
-                  corner="right"
-                  color="red"
-                  icon="delete"
-                  onClick={() => this.handleDeleteButtonClick(i)}
-                />
-                <Button
-                  basic
-                  inverted
-                  onClick={() =>
-                    this.handleButtonClick(
-                      button.hours,
-                      button.minutes,
-                      button.seconds
-                    )
-                  }
-                >
-                  {button.time}
+                <Button as="div" labelPosition="left">
+                  <Label
+                    as="a"
+                    onClick={() =>
+                      this.handleButtonClick(
+                        button.hours,
+                        button.minutes,
+                        button.seconds
+                      )
+                    }
+                  >
+                    {button.time}
+                  </Label>
+                  <Button
+                    color="red"
+                    icon
+                    onClick={() => this.handleDeleteButtonClick(i)}
+                  >
+                    <Icon name="delete" />
+                  </Button>
                 </Button>
               </Menu.Item>
             ))}
