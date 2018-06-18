@@ -204,6 +204,7 @@ class TimerSidebar extends Component {
                 <Button as="div" labelPosition="left">
                   <Label
                     as="a"
+                    style={{ width: '70px', justifyContent: 'center' }}
                     onClick={() =>
                       this.handleButtonClick(
                         button.hours,

@@ -1,24 +1,22 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let controllerWindow
 
-
 // function that return the html
 const findHtml = win => {
   win === 'main'
-    ? // mainWindow.loadFile('./builds/main/index.html')
-      mainWindow.loadURL('http://localhost:3000')
-    : // controllerWindow.loadFile('./builds/controller/index.html')
-      controllerWindow.loadURL('http://localhost:3002')
+    ? mainWindow.loadFile('./builds/main/index.html')
+    : // mainWindow.loadURL('http://localhost:3000')
+      controllerWindow.loadFile('./builds/controller/index.html')
+  // controllerWindow.loadURL('http://localhost:3002')
 }
 
-//open with developer tools 
+//open with developer tools
 const withDevTools = false
-
 
 //catch messages from controller window
 ipcMain.on('timer', (e, timer) => {
@@ -46,10 +44,46 @@ app.on('window-all-closed', () => {
 //   mainWindow === null && createMainWindow()
 // })
 
-
-
-
-
+//create context menu
+const contextMenu = Menu.buildFromTemplate([
+  {
+    role: 'cut',
+  },
+  {
+    role: 'copy',
+  },
+  {
+    role: 'paste',
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Screen Modes',
+    submenu: [
+      {
+        label: 'One Screen Mode',
+        accelerator: process.platform == 'darwin' ? 'Command+1' : 'Ctrl+1',
+        click() {
+          mainWindow == null && createMainWindow()
+          mainWindow != null && mainWindow.reload()
+          controllerWindow != null && controllerWindow.close()
+          mainWindow.webContents.send('twoScreenMode', false)
+        }
+      },
+      {
+        label: 'Two Screen Mode',
+        accelerator: process.platform == 'darwin' ? 'Command+2' : 'Ctrl+2',
+        click() {
+          mainWindow == null && createMainWindow()
+          mainWindow != null && mainWindow.reload()
+          controllerWindow == null && createControllerWindow()
+          mainWindow.webContents.send('twoScreenMode', true)
+        }
+      }
+    ]
+  }
+])
 
 const createMainWindow = () => {
   // Create the browser window.
@@ -66,7 +100,7 @@ const createMainWindow = () => {
   findHtml('main')
 
   // Open the DevTools.
-  withDevTools &&  mainWindow.webContents.openDevTools()
+  withDevTools && mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -124,6 +158,11 @@ const createMainWindow = () => {
     }
   ])
   Menu.setApplicationMenu(menu)
+
+  //attach context menu to windows
+  mainWindow.webContents.on('context-menu', (e, { x, y }) => {
+    contextMenu.popup(mainWindow, x, y)
+  })
 }
 
 const createControllerWindow = () => {
@@ -154,6 +193,7 @@ const createControllerWindow = () => {
   })
   controllerWindow.setPosition(37, 115)
   controllerWindow.setBackgroundColor('#000000')
-
+  controllerWindow.webContents.on('context-menu', (e, { x, y }) => {
+    contextMenu.popup(controllerWindow, x, y)
+  })
 }
-
