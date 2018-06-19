@@ -56,21 +56,24 @@ class TimerSidebar extends Component {
   toogleSidebarVisibility = () => this.props.toogleSidebarVisibility()
 
   handleTimerPickerChange = value => {
-    this.props.timerRunning && this.props.pauseTimer()
-    let hours = value && parseInt(value.format('HH'), 10)
-    let minutes = value && parseInt(value.format('mm'), 10)
-    let seconds = value && parseInt(value.format('ss'), 10)
-    const duration = seconds + minutes * 60 + hours * 3600 - 1
-    minutes = minutes < 10 ? '0' + minutes : minutes
-    seconds = seconds < 10 ? '0' + seconds : seconds
-    this.props.updateTimer(
-      `${hours < 1 ? '' : hours + ':'}${minutes}:${seconds}`,
-      hours,
-      minutes,
-      seconds,
-      duration
-    )
-    this.props.messageIsOn && this.props.toggleMessage()
+    return new Promise(res => {
+      this.props.timerRunning && this.props.pauseTimer()
+      let hours = value && parseInt(value.format('HH'), 10)
+      let minutes = value && parseInt(value.format('mm'), 10)
+      let seconds = value && parseInt(value.format('ss'), 10)
+      const duration = seconds + minutes * 60 + hours * 3600 - 1
+      minutes = minutes < 10 ? '0' + minutes : minutes
+      seconds = seconds < 10 ? '0' + seconds : seconds
+      this.props.updateTimer(
+        `${hours < 1 ? '' : hours + ':'}${minutes}:${seconds}`,
+        hours,
+        minutes,
+        seconds,
+        duration
+      )
+      this.props.messageIsOn && this.props.toggleMessage()
+      res(true)
+    })
   }
 
   handlePlayPauseClick = () => {
@@ -132,8 +135,9 @@ class TimerSidebar extends Component {
         second,
         millisecond: 0
       })
-    )
-    this.handlePlayPauseClick()
+    ).then(() => {
+      this.handlePlayPauseClick()
+    })
   }
   render() {
     return (

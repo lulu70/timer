@@ -10,9 +10,9 @@ let controllerWindow
 const findHtml = win => {
   win === 'main'
     ? mainWindow.loadFile('./builds/main/index.html')
-    : // mainWindow.loadURL('http://localhost:3000')
-      controllerWindow.loadFile('./builds/controller/index.html')
-  // controllerWindow.loadURL('http://localhost:3002')
+      //mainWindow.loadURL('http://localhost:3000')
+    :  controllerWindow.loadFile('./builds/controller/index.html')
+      //controllerWindow.loadURL('http://localhost:3002')
 }
 
 //open with developer tools
@@ -44,29 +44,17 @@ app.on('window-all-closed', () => {
 //   mainWindow === null && createMainWindow()
 // })
 
-//create context menu
-const contextMenu = Menu.buildFromTemplate([
+//create the main menu
+const menu = Menu.buildFromTemplate([
   {
-    role: 'cut',
-  },
-  {
-    role: 'copy',
-  },
-  {
-    role: 'paste',
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Screen Modes',
+    label: 'Timer',
     submenu: [
       {
         label: 'One Screen Mode',
         accelerator: process.platform == 'darwin' ? 'Command+1' : 'Ctrl+1',
         click() {
-          mainWindow == null && createMainWindow()
-          mainWindow != null && mainWindow.reload()
+          if (mainWindow != null && controllerWindow == null) return
+          controllerWindow != null && mainWindow.reload()
           controllerWindow != null && controllerWindow.close()
           mainWindow.webContents.send('twoScreenMode', false)
         }
@@ -75,13 +63,102 @@ const contextMenu = Menu.buildFromTemplate([
         label: 'Two Screen Mode',
         accelerator: process.platform == 'darwin' ? 'Command+2' : 'Ctrl+2',
         click() {
-          mainWindow == null && createMainWindow()
-          mainWindow != null && mainWindow.reload()
+          if (mainWindow != null && controllerWindow != null) return
+          mainWindow != null && controllerWindow == null && mainWindow.reload()
           controllerWindow == null && createControllerWindow()
           mainWindow.webContents.send('twoScreenMode', true)
         }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Enter / Exit Full Screen...',
+        accelerator: process.platform == 'darwin' ? 'Command+F' : 'Ctrl+F',
+        click() {
+          mainWindow.isFullScreen()
+            ? mainWindow.setFullScreen(false)
+            : mainWindow.setFullScreen(true)
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Close...',
+        accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
+        click() {
+          const window = BrowserWindow.getFocusedWindow()
+          window.close()
+        }
+      },
+      {
+        label: 'Quit...',
+        accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+        click() {
+          app.quit()
+        }
       }
     ]
+  }
+])
+
+//create context menu
+const contextMenu = Menu.buildFromTemplate([
+  {
+    role: 'cut'
+  },
+  {
+    role: 'copy'
+  },
+  {
+    role: 'paste'
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'One Screen Mode',
+    accelerator: process.platform == 'darwin' ? 'Command+1' : 'Ctrl+1',
+    click() {
+      if (mainWindow != null && controllerWindow == null) return
+      controllerWindow != null && mainWindow.reload()
+      controllerWindow != null && controllerWindow.close()
+      mainWindow.webContents.send('twoScreenMode', false)
+    }
+  },
+  {
+    label: 'Two Screen Mode',
+    accelerator: process.platform == 'darwin' ? 'Command+2' : 'Ctrl+2',
+    click() {
+      if (mainWindow != null && controllerWindow != null) return
+      mainWindow != null && controllerWindow == null && mainWindow.reload()
+      controllerWindow == null && createControllerWindow()
+      mainWindow.webContents.send('twoScreenMode', true)
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Enter / Exit Full Screen...',
+    accelerator: process.platform == 'darwin' ? 'Command+F' : 'Ctrl+F',
+    click() {
+      mainWindow.isFullScreen()
+        ? mainWindow.setFullScreen(false)
+        : mainWindow.setFullScreen(true)
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Close...',
+    accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
+    click() {
+      const window = BrowserWindow.getFocusedWindow()
+      window.close()
+    }
   }
 ])
 
@@ -112,52 +189,12 @@ const createMainWindow = () => {
   })
   mainWindow.setPosition(760, 190)
   mainWindow.setBackgroundColor('#000000')
-  const menu = Menu.buildFromTemplate([
-    {
-      label: 'Timer',
-      submenu: [
-        {
-          label: 'One Screen Mode',
-          accelerator: process.platform == 'darwin' ? 'Command+1' : 'Ctrl+1',
-          click() {
-            mainWindow == null && createMainWindow()
-            mainWindow != null && mainWindow.reload()
-            controllerWindow != null && controllerWindow.close()
-            mainWindow.webContents.send('twoScreenMode', false)
-          }
-        },
-        {
-          label: 'Two Screen Mode',
-          accelerator: process.platform == 'darwin' ? 'Command+2' : 'Ctrl+2',
-          click() {
-            mainWindow == null && createMainWindow()
-            mainWindow != null && mainWindow.reload()
-            controllerWindow == null && createControllerWindow()
-            mainWindow.webContents.send('twoScreenMode', true)
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Close...',
-          accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
-          click() {
-            const window = BrowserWindow.getFocusedWindow()
-            window.close()
-          }
-        },
-        {
-          label: 'Quit...',
-          accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-          click() {
-            app.quit()
-          }
-        }
-      ]
-    }
-  ])
+
+  // add a main menu to app
   Menu.setApplicationMenu(menu)
+
+  //autohide the menu bar
+  mainWindow.setAutoHideMenuBar(true)
 
   //attach context menu to windows
   mainWindow.webContents.on('context-menu', (e, { x, y }) => {
