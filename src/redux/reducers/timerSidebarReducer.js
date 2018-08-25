@@ -38,7 +38,7 @@ const timerSidebarReducer = (state = initialState, action) => {
     case 'SET_STATE_FROM_LOCAL_STORAGE': {
       return {
         ...state,
-        buttons: Object.keys(action.buttons).map(key => action.buttons[key])
+        buttons: action.buttons
       }
     }
     default: {

@@ -81,7 +81,7 @@ class TimerSidebar extends Component {
       this.props.pauseTimer()
     } else {
       this.props.playTimer()
-      this.props.toogleSidebarVisibility()
+      // this.props.toogleSidebarVisibility()
     }
   }
 
@@ -149,6 +149,7 @@ class TimerSidebar extends Component {
             size="large"
             name="setting"
             onClick={this.toogleSidebarVisibility}
+            // onMouseEnter={this.toogleSidebarVisibility}
             style={{
               ...this.props.settingIconStyle,
               color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
@@ -158,6 +159,8 @@ class TimerSidebar extends Component {
         <Sidebar.Pushable style={{ background: this.props.bgColor }}>
           <Sidebar
             as={Menu}
+            onMouseLeave={this.toogleSidebarVisibility}
+
             animation="scale down"
             width="thin"
             direction="right"
