@@ -1,9 +1,9 @@
 {
-  "name": "Timer",
+  "name": "timer",
   "version": "0.1.0",
   "private": true,
   "ProductName": "Timer",
-  "homepage": "./",
+  "homepage": "https://timer.leoniko.net/",
   "devDependencies": {
     "electron": "^2.0.2",
     "electron-packager": "^12.1.0",

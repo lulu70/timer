@@ -53,11 +53,17 @@ class Timer extends Component {
     clearInterval(this.props.timerInterval)
   }
 
+  handleTouch = () => {
+    this.props.sidebarVisibility && this.props.toogleSidebarVisibility()
+  }
+
   render() {
+
     return (
       <div
         id="timerContainer"
         style={{ ...this.props.containerStyle, background: this.props.bgColor }}
+        onTouchStart={this.handleTouch}
       >
         {this.props.messageIsOn && (
           <div>
@@ -101,7 +107,8 @@ const mapStateToProps = state => ({
   timerInterval: state.timer.timerInterval,
   messageIsOn: state.timer.messageIsOn,
   twoScreenMode: state.timer.twoScreenMode,
-  warningColor: state.timer.warningColor
+  warningColor: state.timer.warningColor,
+  sidebarVisibility: state.timerSidebar.visible
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -128,6 +135,11 @@ const mapDispatchToProps = dispatch => ({
   },
   pauseTimer: () => {
     dispatch({ type: 'PAUSE_TIMER' })
+  },
+  toogleSidebarVisibility: () => {
+    dispatch({
+      type: 'TOGGLE_SIDEBAR_VISIBILITY'
+    })
   }
 })
 
