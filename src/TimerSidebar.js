@@ -160,9 +160,8 @@ class TimerSidebar extends Component {
           <Sidebar
             as={Menu}
             onMouseLeave={this.toogleSidebarVisibility}
-
             animation="scale down"
-            width="thin"
+            width="very wide"
             direction="right"
             visible={this.props.visible}
             icon="labeled"
