@@ -10,6 +10,7 @@
     "react-scripts": "1.1.4"
   },
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "is-electron": "^2.1.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -26,6 +27,8 @@
   },
   "main": "electronMain.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
