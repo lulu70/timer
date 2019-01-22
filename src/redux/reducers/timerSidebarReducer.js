@@ -18,21 +18,26 @@ const timerSidebarReducer = (state = initialState, action) => {
       }
     }
     case 'ADD_BUTTON': {
+      const newButton = {
+        id: action.id,
+        hours: action.hours,
+        minutes: action.minutes,
+        seconds: action.seconds,
+        time: action.time
+      }
       return {
         ...state,
-        buttons: [...state.buttons,{
-          id: action.id,
-          hours: action.hours,
-          minutes: action.minutes,
-          seconds: action.seconds,
-          time: action.time
-        }]
+        buttons:
+          state.buttons ? [...state.buttons, newButton] : [newButton]
       }
     }
     case 'DELETE_BUTTON': {
       return {
-        ...state, 
-        buttons: [...state.buttons.slice(0,action.index),...state.buttons.slice(action.index+1)]
+        ...state,
+        buttons: [
+          ...state.buttons.slice(0, action.index),
+          ...state.buttons.slice(action.index + 1)
+        ]
       }
     }
     case 'SET_STATE_FROM_LOCAL_STORAGE': {

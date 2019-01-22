@@ -203,7 +203,7 @@ class TimerSidebar extends Component {
                 <Icon name="save" />
               </Menu.Item>
             )}
-            {this.props.buttons.map((button, i) => (
+            {this.props.buttons && this.props.buttons.map((button, i) => (
               <Menu.Item key={i}>
                 <Button as="div" labelPosition="left">
                   <Label
