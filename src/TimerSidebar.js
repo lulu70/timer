@@ -146,10 +146,9 @@ class TimerSidebar extends Component {
           <Icon
             inverted
             id="settings"
-            size="large"
-            name="setting"
+            size="big"
+            name={this.props.visible ? 'close' : 'setting'}
             onClick={this.toogleSidebarVisibility}
-            // onMouseEnter={this.toogleSidebarVisibility}
             style={{
               ...this.props.settingIconStyle,
               color: this.props.messageIsOn ? 'red' : this.props.pStyle.color
@@ -159,7 +158,6 @@ class TimerSidebar extends Component {
         <Sidebar.Pushable style={{ background: this.props.bgColor }}>
           <Sidebar
             as={Menu}
-            onMouseLeave={this.toogleSidebarVisibility}
             animation="scale down"
             width="very wide"
             direction="right"

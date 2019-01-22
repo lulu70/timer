@@ -53,7 +53,7 @@ class Timer extends Component {
     clearInterval(this.props.timerInterval)
   }
 
-  handleTouch = () => {
+  closeSidebar = () => {
     this.props.sidebarVisibility && this.props.toogleSidebarVisibility()
   }
 
@@ -63,7 +63,8 @@ class Timer extends Component {
       <div
         id="timerContainer"
         style={{ ...this.props.containerStyle, background: this.props.bgColor }}
-        onTouchStart={this.handleTouch}
+        onTouchStart={this.closeSidebar}
+        onClick={this.closeSidebar}
       >
         {this.props.messageIsOn && (
           <div>
