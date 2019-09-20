@@ -141,12 +141,12 @@ class TimerSidebar extends Component {
   }
   render() {
     return (
-      <div id="sidebarContainer">
+      <div id='sidebarContainer'>
         {!this.props.twoScreenMode && (
           <Icon
             inverted
-            id="settings"
-            size="big"
+            id='settings'
+            size='huge'
             name={this.props.visible ? 'close' : 'setting'}
             onClick={this.toogleSidebarVisibility}
             style={{
@@ -158,18 +158,18 @@ class TimerSidebar extends Component {
         <Sidebar.Pushable style={{ background: this.props.bgColor }}>
           <Sidebar
             as={Menu}
-            animation="scale down"
-            width="very wide"
-            direction="right"
+            animation='scale down'
+            width='very wide'
+            direction='right'
             visible={this.props.visible}
-            icon="labeled"
+            icon='labeled'
             vertical
             inverted
           >
-            <Menu.Item name="time">
+            <Menu.Item name='time'>
               <TimePicker
                 style={{ width: 100 }}
-                className="timePicker"
+                className='timePicker'
                 ref={ref => (this.timePicker = ref)}
                 allowEmpty={false}
                 defaultValue={moment().set({
@@ -182,53 +182,54 @@ class TimerSidebar extends Component {
               />
             </Menu.Item>
             {this.props.duration >= 0 && (
-              <Menu.Item name="playPause" onClick={this.handlePlayPauseClick}>
+              <Menu.Item name='playPause' onClick={this.handlePlayPauseClick}>
                 <Icon name={this.props.timerRunning ? 'pause' : 'play'} />
               </Menu.Item>
             )}
             <Menu.Item
-              name="resetToLastValue"
+              name='resetToLastValue'
               onClick={this.hadleResetToLastValueClick}
             >
-              <Icon name="undo" />
+              <Icon name='undo' />
             </Menu.Item>
-            <Menu.Item as="a" onClick={this.handleResetClick}>
+            <Menu.Item as='a' onClick={this.handleResetClick}>
               00:00
             </Menu.Item>
             {this.props.duration >= 0 && (
               <Menu.Item
-                name="save to a button"
+                name='save to a button'
                 onClick={this.handleSaveButtonClick}
               >
-                <Icon name="save" />
+                <Icon name='save' />
               </Menu.Item>
             )}
-            {this.props.buttons && this.props.buttons.map((button, i) => (
-              <Menu.Item key={i}>
-                <Button as="div" labelPosition="left">
-                  <Label
-                    as="a"
-                    style={{ width: '70px', justifyContent: 'center' }}
-                    onClick={() =>
-                      this.handleButtonClick(
-                        button.hours,
-                        button.minutes,
-                        button.seconds
-                      )
-                    }
-                  >
-                    {button.time}
-                  </Label>
-                  <Button
-                    color="red"
-                    icon
-                    onClick={() => this.handleDeleteButtonClick(i)}
-                  >
-                    <Icon name="delete" />
+            {this.props.buttons &&
+              this.props.buttons.map((button, i) => (
+                <Menu.Item key={i}>
+                  <Button as='div' labelPosition='left'>
+                    <Label
+                      as='a'
+                      style={{ width: '70px', justifyContent: 'center' }}
+                      onClick={() =>
+                        this.handleButtonClick(
+                          button.hours,
+                          button.minutes,
+                          button.seconds
+                        )
+                      }
+                    >
+                      {button.time}
+                    </Label>
+                    <Button
+                      color='red'
+                      icon
+                      onClick={() => this.handleDeleteButtonClick(i)}
+                    >
+                      <Icon name='delete' />
+                    </Button>
                   </Button>
-                </Button>
-              </Menu.Item>
-            ))}
+                </Menu.Item>
+              ))}
           </Sidebar>
           <Sidebar.Pusher>
             <Timer />

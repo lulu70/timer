@@ -58,10 +58,9 @@ class Timer extends Component {
   }
 
   render() {
-
     return (
       <div
-        id="timerContainer"
+        id='timerContainer'
         style={{ ...this.props.containerStyle, background: this.props.bgColor }}
         onTouchStart={this.closeSidebar}
         onClick={this.closeSidebar}
@@ -69,22 +68,23 @@ class Timer extends Component {
         {this.props.messageIsOn && (
           <div>
             <p
-              id="message"
+              id='message'
               style={{
                 ...this.props.pStyle,
-                fontSize: '10vh',
+                fontSize: '17vh',
                 letterSpacing: '1vh',
+                textAlign: 'center',
                 color: this.props.warningColor
               }}
-              className="blinking"
+              className='blinking'
             >
-              Time Is Up
+              TIME IS UP
             </p>
             <Sound url={chimes} playStatus={Sound.status.PLAYING} />
           </div>
         )}
         <p
-          id="timer"
+          id='timer'
           style={{
             ...this.props.pStyle,
             color: this.props.messageIsOn

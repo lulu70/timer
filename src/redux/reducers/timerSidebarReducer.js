@@ -3,7 +3,7 @@ const initialState = {
   buttons: [],
   settingIconStyle: {
     position: 'absolute',
-    bottom: '5px',
+    top: '5px',
     right: '5px',
     zIndex: '10'
   }
@@ -27,8 +27,7 @@ const timerSidebarReducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        buttons:
-          state.buttons ? [...state.buttons, newButton] : [newButton]
+        buttons: state.buttons ? [...state.buttons, newButton] : [newButton]
       }
     }
     case 'DELETE_BUTTON': {
