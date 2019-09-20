@@ -167,7 +167,6 @@ const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 640,
     height: 360,
-    frame: false,
     webPreferences: {
       nodeIntegration: false,
       preload: __dirname + '/preload.js'
@@ -190,7 +189,6 @@ const createMainWindow = () => {
   })
   mainWindow.setPosition(760, 190)
   mainWindow.setBackgroundColor('#000000')
-
   // add a main menu to app
   Menu.setApplicationMenu(menu)
 

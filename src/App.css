@@ -1,6 +1,5 @@
 html body {
   background: black;
-  -webkit-app-region: drag;
 }
 
 .blinking {
