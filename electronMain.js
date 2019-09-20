@@ -10,9 +10,9 @@ let controllerWindow
 const findHtml = win => {
   win === 'main'
     ? mainWindow.loadFile('./builds/main/index.html')
-      //mainWindow.loadURL('http://localhost:3000')
-    :  controllerWindow.loadFile('./builds/controller/index.html')
-      //controllerWindow.loadURL('http://localhost:3002')
+    : //mainWindow.loadURL('http://localhost:3000')
+      controllerWindow.loadFile('./builds/controller/index.html')
+  //controllerWindow.loadURL('http://localhost:3002')
 }
 
 //open with developer tools
@@ -167,6 +167,7 @@ const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 640,
     height: 360,
+    frame: false,
     webPreferences: {
       nodeIntegration: false,
       preload: __dirname + '/preload.js'
