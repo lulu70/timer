@@ -5,10 +5,11 @@ import App from './App'
 import 'semantic-ui-css/semantic.min.css'
 import store from './redux/redux.js'
 import { Provider } from 'react-redux'
-
+import { unregister } from './registerServiceWorker'
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
   document.getElementById('root')
 )
+unregister()
