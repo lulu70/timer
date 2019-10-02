@@ -7,7 +7,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import isElectron from 'is-electron'
 import throttle from 'lodash/throttle'
-
+import Footer from './Fotter'
 class TimerSidebar extends Component {
   componentDidMount() {
     if (isElectron()) {
@@ -233,6 +233,7 @@ class TimerSidebar extends Component {
           </Sidebar>
           <Sidebar.Pusher>
             <Timer />
+            {!isElectron() && <Footer />}
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>
