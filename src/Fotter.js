@@ -16,7 +16,7 @@ const Fotter = () => {
       <a
         href='https://apps.apple.com/tt/app/events-timer/id1481806344'
         target='blank'
-        style={{ margin: '1rem' }}
+        style={{ margin: '0.2rem' }}
       >
         <img src={appstoreBadge} alt='Download_on_the_Mac_App_Store_Badge' />
       </a>
