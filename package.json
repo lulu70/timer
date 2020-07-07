@@ -5,7 +5,7 @@
   "ProductName": "Timer",
   "homepage": "./",
   "devDependencies": {
-    "electron": "^2.0.18",
+    "electron": "^7.2.4",
     "electron-installer-dmg": "^3.0.0",
     "electron-packager": "^14.0.6",
     "react-scripts": "^3.4.1"
